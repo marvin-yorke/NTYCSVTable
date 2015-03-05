@@ -4,6 +4,7 @@
 //
 //  Created by Naoto Kaneko on 2014/04/15.
 //  Copyright (c) 2014 Naoto Kaneko. All rights reserved.
+//  Copyright (c) 2015 Maxim Smirnov. All rights reserved.
 //
 
 #import "NTYCSVTable.h"
@@ -52,17 +53,16 @@
 - (void)parseHeadersFromLines:(NSArray *)lines
 {
     NSString *headerLine = lines.firstObject;
+    headerLine = [headerLine stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
     self.headers = [headerLine componentsSeparatedByString:self.columnSeperator];
 }
 
 - (void)parseRowsFromLines:(NSArray *)lines
 {
     NSMutableArray *rows = [NSMutableArray new];
-    for (NSString *line in lines) {
-        NSInteger lineNumber = [lines indexOfObject:line];
-        if (lineNumber == 0) {
-            continue;
-        }
+    for (NSUInteger i = 1; i < lines.count; i++) {
+        
+        NSString *line = [lines[i] stringByTrimmingCharactersInSet:[NSCharacterSet newlineCharacterSet]];
         
         NSArray *values = [line componentsSeparatedByString:self.columnSeperator];
         NSMutableDictionary *row = [NSMutableDictionary new];
@@ -79,6 +79,7 @@
         }
         [rows addObject:[NSDictionary dictionaryWithDictionary:row]];
     }
+    
     self.rows = [NSArray arrayWithArray:rows];
 }
 
@@ -96,3 +97,4 @@
 }
 
 @end
+
